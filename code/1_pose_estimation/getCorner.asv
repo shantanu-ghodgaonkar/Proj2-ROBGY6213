@@ -7,7 +7,7 @@ function res = getCorner(id)
     % res = List of the coordinates of the 4 corners (or 4 corners and the
     % centre) of each detected AprilTag in the image in a systematic method
 
-%tic% MY IMPLEMENTATION START ---------------------------------------------
+tic % MY IMPLEMENTATION START ---------------------------------------------
     col = floor((id / 12) + 1); % Calculate the column number of the tag
     row = mod(id, 12) + 1; % Calculate the row number of the tag
     fullTagSize = 0.152; % Set the tag size 
@@ -24,11 +24,17 @@ function res = getCorner(id)
         p4Y = 2 * ((col - 2) * 0.152) + (2*0.178);
     end
 
-    res = [[(p4X + halfTagSize), (p4Y + halfTagSize)];  % p0
-        [(p4X + fullTagSize), p4Y];                     % p1
-        [(p4X + fullTagSize),(p4Y + fullTagSize)];      % p2
-        [p4X, (p4Y + fullTagSize)];                     % p3
-        [p4X, p4Y]];                                    % p4
+    p0 = [(p4X + halfTagSize), (p4Y + halfTagSize)];
+    p4 = [p4X, p4Y];
+    p3 = [p4(1,1), (p4Y + fullTagSize)];
+    p1 = [(p4X + fullTagSize), p4Y];
+    p2 = [p1(1,1), p3(1,2)];
 
-%toc% MY IMPLEMENTATION END -----------------------------------------------
+    res = [[(p4X + halfTagSize), (p4Y + halfTagSize)]; % p0
+        p1;
+        p2;
+        p3;
+        p4];
+
+toc % MY IMPLEMENTATION END -----------------------------------------------
 end

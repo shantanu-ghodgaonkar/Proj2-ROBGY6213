@@ -19,4 +19,10 @@ function [position, orientation] = estimatePose(data, t)
     
     % orientation = euler angles representing the orientation of the
     % drone(body) in the world frame in the current time, in the order ZYX
+
+% MY IMPLEMENTATION START -------------------------------------------------
+    
+    position = zeros(3,1);
+    orientation = zeros(3,1);
+% MY IMPLEMENTATION END ---------------------------------------------------
 end
