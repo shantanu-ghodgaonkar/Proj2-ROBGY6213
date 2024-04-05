@@ -22,7 +22,7 @@ if(col <= 3)
 elseif ((col > 3) && (col <= 6))
     p4Y = ((2 * (col - 1)) * 0.152) + 0.026;
 elseif (col > 6)
-    p4Y = ((2 * (col - 1)) * 0.152) + 0.052;
+    p4Y = 2 * ((col - 2) * 0.152) + (2*0.178);
 end
 
 res = [... [(p4X + halfTagSize); (p4Y + halfTagSize)],  ... p0
