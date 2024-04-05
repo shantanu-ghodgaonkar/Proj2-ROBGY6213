@@ -21,4 +21,12 @@ function [position, orientation, R_c2w] = estimatePose(data, t)
     % drone(body) in the world frame in the current time, in the order XYZ
     
     %R_c2w = Rotation which defines camera to world frame
+%% MY IMPLEMENTATION START ------------------------------------------------
+% tic
+
+% Camera intrinsic matrix
+k = [311.0520, 0, 201.8724; 0, 311.3885, 113.6210; 0, 0, 1]; 
+
+% toc
+%% MY IMPLEMENTATION END --------------------------------------------------
 end
