@@ -40,10 +40,7 @@ for n = 2:length(sampledData)
     R_b2w=R_c2b'*R_c2w(1:3,1:3);
     P = -1 * (b2c(1:3, 1:3) * position);
     Z = P(3);
-    V_OMG = [];
     if ransacFlag == 1
-        disp("DEBUG POINT");
-    else
         H = [];
         p_dot = [];
         dt = t(n) - t(n-1);
@@ -57,6 +54,8 @@ for n = 2:length(sampledData)
             p_dot = vertcat(p_dot, p_dot_i);
         end
         V_OMG = [R_b2w', zeros(3); zeros(3) R_b2w'] * ([R_c2b -R_c2b*Skew_t_c2b;zeros(3,3) R_c2b] * (pinv(H) * p_dot));
+    else
+        disp("DEBUG POINT");
     end
 
     

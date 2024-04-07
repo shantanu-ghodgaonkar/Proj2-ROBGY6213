@@ -27,6 +27,71 @@ function [position, orientation, R_c2w] = estimatePose(data, t)
 % Camera intrinsic matrix
 k = [311.0520, 0, 201.8724; 0, 311.3885, 113.6210; 0, 0, 1]; 
 
+% A (8x9) matrix
+A = [];
+
+% Iterate over all the detected April Tags
+for i = 1:length(data(t).id)
+    % Get corners of each April Tag in the world frame
+    pw = getCorner(data(t).id(i));
+    % Get corners of each April Tag in the camera frame
+    pc = [data(t).p1(:,i), data(t).p2(:,i), data(t).p3(:,i), data(t).p4(:,i)];
+  
+    % Find the A matrix 
+    A_temp = [   pw(1,1), pw(2,1), 1, 0, 0, 0, (-pc(1,1)*pw(1,1)), (-pc(1,1)*pw(2,1)), (-pc(1,1));
+        0, 0, 0, pw(1,1), pw(2,1), 1, (-pc(2,1)*pw(1,1)), (-pc(2,1)*pw(2,1)), (-pc(2,1));
+        pw(1,2), pw(2,2), 1, 0, 0, 0, (-pc(1,2)*pw(1,2)), (-pc(1,2)*pw(2,2)), (-pc(1,2));
+        0, 0, 0, pw(1,2), pw(2,2), 1, (-pc(2,2)*pw(1,2)), (-pc(2,2)*pw(2,2)), (-pc(2,2));
+        pw(1,3), pw(2,3), 1, 0, 0, 0, (-pc(1,3)*pw(1,3)), (-pc(1,3)*pw(2,3)), (-pc(1,3));
+        0, 0, 0, pw(1,3), pw(2,3), 1, (-pc(2,3)*pw(1,3)), (-pc(2,3)*pw(2,3)), (-pc(2,3));
+        pw(1,4), pw(2,4), 1, 0, 0, 0, (-pc(1,4)*pw(1,4)), (-pc(1,4)*pw(2,4)), (-pc(1,4));
+        0, 0, 0, pw(1,4), pw(2,4), 1, (-pc(2,4)*pw(1,4)), (-pc(2,4)*pw(2,4)), (-pc(2,4));];
+    A = vertcat(A,A_temp); 
+end
+% Perform SVD of A to get the V matrix
+[~, ~, V] = svd(A);
+
+h = V(9,9) * [V(1:3,9), V(4:6,9), V(7:9,9)]';
+
+% Find RT = [R1 R2 T]
+RT = k\h;
+% Extract R1
+R1 = RT(:,1);
+R1_skew = [0, -R1(3,1), R1(2,1); R1(3,1), 0, -R1(1,1); -R1(2,1), R1(1,1), 0];
+% Extract R2
+R2 = RT(:,2);
+% Extract T
+T_temp = RT(:,3);
+
+% Compute the SVD of the newly formed orthogonal matrix
+[Ur, ~, Vr] = svd([R1, R2, R1_skew*R2]);
+
+% Compute the rotation matrix from the orthogonal matrix
+R = Ur * [1, 0, 0; 0, 1, 0; 0, 0, det(Ur*Vr')] * Vr';
+
+% Scale T
+% T_temp = T_temp / norm(R1) ;
+T = T_temp / norm(R1) ;
+
+% Combine rotational and translational parts to get camera to world frame
+HT = [[R, T] ; [0,0,0,1]];
+
+% Find the Homogenous transform to go from camera frame to imu frame
+% R_b2c = [0.7071, -0.7071, 0; -0.7071, -0.7071, 0; 0, 0, -1]; % eul2rotm([-pi/4,pi,0])
+% T_b2c = [0.0283; -0.0283; 0.0300]; % eul2rotm([-pi/4,pi,0]) * [-0.04, 0.0, -0.03]';
+c2b = [0.7071, -0.7071, 0, -0.04 ; -0.7071, -0.7071, 0, 0 ; 0, 0, -1, 0.03 ; 0, 0, 0, 1];% inv([R_b2c, T_b2c; [0,0,0,1]]);
+
+% Transform to imu frame
+HT = HT\c2b;
+
+% Set the position
+position = HT(1:3, 4);
+
+% Set the orientation
+orientation = rotm2eul(HT(1:3, 1:3)) ;
+
+% Set Rotation which defines camera to world frame
+R_c2w = R;
 % toc
 %% MY IMPLEMENTATION END --------------------------------------------------
 end
