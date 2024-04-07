@@ -1,4 +1,4 @@
-# Vision Based 3-D Pose Estimator
+# Vision Based 3-D Attitude Estimator
 This repository contains the code and resources for ROB-6213 Project 2, which focuses on implementing a vision-based 3D pose estimator for a Nano+ quadrotor using AprilTags.
 
 ## Project Overview
