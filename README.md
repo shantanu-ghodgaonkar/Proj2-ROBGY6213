@@ -1,9 +1,9 @@
-# Vision Based 3-D Pose Estimator
+# Vision Based 3-D Attitude Estimator
 This repository contains the code and resources for ROB-6213 Project 2, which focuses on implementing a vision-based 3D pose estimator for a Nano+ quadrotor using AprilTags.
 
 ## Project Overview
 
-This project aims to estimate the position and orientation (pose) of a Nano+ quadrotor in real-time using a monocular camera and AprilTags. AprilTags are fiducial markers that can be easily detected and identified in images, allowing for accurate pose estimation.
+This project aims to estimate the attitude (position, orientation, linear velocity and angular velocity) of a Nano+ quadrotor in real-time using a monocular camera and AprilTags. AprilTags are fiducial markers that can be easily detected and identified in images, allowing for accurate pose estimation.
 
 ## Data Description
 
@@ -23,7 +23,7 @@ vicon: data containing position, orientation, and velocities in the world frame
 
 ### Pose Estimation (estimatePose.m)
 
-Implement an algorithm to estimate the pose of the quadrotor for each image frame based on detected AprilTags and their world frame locations.
+Implement an algorithm to estimate the  of the quadrotor for each image frame based on detected AprilTags and their world frame locations.
 Utilize the camera calibration data and corner locations.
 ### Corner Extraction and Tracking (getCorners.m)
 
