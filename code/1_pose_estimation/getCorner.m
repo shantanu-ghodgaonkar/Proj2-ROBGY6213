@@ -30,7 +30,6 @@ res = [... [(p4X + halfTagSize); (p4Y + halfTagSize)],  ... p0
     [(p4X + fullTagSize);(p4Y + fullTagSize)],      ... p2
     [p4X; (p4Y + fullTagSize)],                     ... p3
     [p4X; p4Y]];                                    ... p4
-% res = res * 10;
 %toc
 %% MY IMPLEMENTATION END --------------------------------------------------
 end

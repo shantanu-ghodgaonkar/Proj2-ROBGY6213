@@ -45,6 +45,7 @@ for i = 1:length(data(t).id)
         0, 0, 0, pw(1,3), pw(2,3), 1, (-pc(2,3)*pw(1,3)), (-pc(2,3)*pw(2,3)), (-pc(2,3));
         pw(1,4), pw(2,4), 1, 0, 0, 0, (-pc(1,4)*pw(1,4)), (-pc(1,4)*pw(2,4)), (-pc(1,4));
         0, 0, 0, pw(1,4), pw(2,4), 1, (-pc(2,4)*pw(1,4)), (-pc(2,4)*pw(2,4)), (-pc(2,4));];
+    % Vertically stack all A matrices
     A = vertcat(A,A_temp); 
 end
 % Perform SVD of A to get the V matrix
@@ -69,7 +70,6 @@ T_temp = RT(:,3);
 R = Ur * [1, 0, 0; 0, 1, 0; 0, 0, det(Ur*Vr')] * Vr';
 
 % Scale T
-% T_temp = T_temp / norm(R1) ;
 T = T_temp / norm(R1) ;
 
 % Combine rotational and translational parts to get camera to world frame
